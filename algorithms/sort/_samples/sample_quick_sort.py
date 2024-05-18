@@ -3,7 +3,7 @@
 from algorithms.sort import QuickSort
 
 if __name__ == '__main__':
-    data = [2, 4, 3, 1]
+    data = [5, 3, 1, 2, 4]
     sorter = QuickSort()
     sorter.set_data(data)
     sorter.run()

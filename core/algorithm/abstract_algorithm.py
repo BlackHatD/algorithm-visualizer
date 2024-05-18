@@ -16,7 +16,7 @@ class AbstractAlgorithm(metaclass=ABCMeta):
 
         ## belows parameter will be set when attached by manager
         self._attached        = False
-        self._sleep_timer     = 0.1
+        self._sleep_time      = 0.1
         self._draw_value_flag = False
 
     def __call__(self, *args, **kwargs):
@@ -30,6 +30,10 @@ class AbstractAlgorithm(metaclass=ABCMeta):
     @abstractmethod
     def run(self):
         raise NotImplementedError()
+
+    def get_value(self, index):
+        """get value"""
+        return self.dataset[index].value
 
     def get_data(self):
         """get data"""
@@ -72,14 +76,14 @@ class AbstractAlgorithm(metaclass=ABCMeta):
         """this method will be overridden"""
         self.dataset[index_1], self.dataset[index_2] = self.dataset[index_2], self.dataset[index_1]
 
-    def reset_color(self, *indexes):
+    def reset_colors(self, *indexes):
         """this method will be overridden"""
 
-    def reset_colors(self):
+    def reset_color_all(self):
         """this method will be overridden"""
 
     def sleep(self):
         """sleep for drawing"""
         if self._attached:
-            time.sleep(self._sleep_timer)
+            time.sleep(self._sleep_time)
 

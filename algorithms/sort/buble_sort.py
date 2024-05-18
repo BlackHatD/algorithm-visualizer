@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 # my-packages
-from visualizer.algorithm import AbstractAlgorithm
+from core.algorithm import AbstractAlgorithm
 
 __all__ = ['Bubble']
 
@@ -27,7 +27,7 @@ class Bubble(AbstractAlgorithm):
                     self.sleep()
 
                 ## reset colors
-                self.reset_color(j, j+1)
+                self.reset_colors(j, j + 1)
 
         # draw all objects
         self.draw_all('Yellow')

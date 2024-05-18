@@ -8,6 +8,7 @@ from tkinter import ttk
 from core import utils
 from core.widgets.visualizer.abstract_visualizer import AbstractVisualizer
 from core.widgets.canvas.draw_util import DrawUtilKeys, DrawUtil
+from core.algorithm.manager import AlgorithmManager
 
 
 __all__ = ['Visualizer']
@@ -17,9 +18,9 @@ class Visualizer(AbstractVisualizer):
     """Visualizer Class"""
 
     def __init__(self
-                 , win_size=(640, 480)               # window size
-                 , limit_data_size=(5, 100, 10)      # (from, to, default)
-                 , limit_speed=(0.001, 1, 0.1)       # (from, to, default)
+                 , win_size=(1024, 520)               # window size
+                 , limit_data_size=(5, 100, 35)      # (from, to, default)
+                 , limit_speed=(0.001, 1, 0.01)       # (from, to, default)
                  , default_color=('Green', 'Black')  # (rectangle, value)
                  ):
 
@@ -34,8 +35,13 @@ class Visualizer(AbstractVisualizer):
         ## drawer
         self.__drawer = DrawUtil(*default_color)
 
-        # whether displaying values, or not
-        self.__show_value_flag = False
+        ## whether displaying values, or not
+        self.show_value_flag = False
+
+        ## algorithm
+        self.__current_algorithm = None
+        self.__algorithm_manager = AlgorithmManager()
+
 
         ##======================================================================##
         ## option frame
@@ -131,8 +137,6 @@ class Visualizer(AbstractVisualizer):
         ## set window's position as the center
         self.set_win_center()
 
-        ## register callback
-        self._register_before_mainloop(lambda : self.__do_generate_dataset())
 
         ## define a bind function
         def bind_draw_objs(e):
@@ -147,6 +151,10 @@ class Visualizer(AbstractVisualizer):
 
         ## setup callback
         self.__drawer.setup_configure(bind_draw_objs)
+
+        ## register callback
+        self._register_before_mainloop(lambda : self.__do_generate_dataset() if not self.dataset else None)
+
 
     def __arrange_widgets(self):
         """arrange widgets"""
@@ -181,9 +189,9 @@ class Visualizer(AbstractVisualizer):
 
     def __setup_widgets(self):
         """setup widgets"""
-        ## TODO-#1
         ## combobox
-        self._w_select_algorithm_combobox.configure(values=[''])
+        all_algorithms = self.__algorithm_manager.all_algorithm
+        self._w_select_algorithm_combobox.configure(values=all_algorithms if all_algorithms else [''])
         self._w_select_algorithm_combobox.current(0)
 
         ## button
@@ -220,11 +228,21 @@ class Visualizer(AbstractVisualizer):
     @__toggle_widgets_state_decorate
     def __do_start_algorithm(self):
         """start a selected algorithm"""
-        import time
-        while True:
-            self.__do_shuffle_dataset()
-            print(self.dataset)
-            time.sleep(1)
+        ## initialize an algorithm at the first
+        self.__init_algorithm()
+
+        if self.__current_algorithm:
+            ## erase all canvas's objects
+            self.__drawer.erase_all()
+
+            ## draw all canvas's objects
+            self.__draw_all(DrawUtilKeys.DEFAULT_COLOR, DrawUtilKeys.DEFAULT_COLOR)
+
+            ## set sleep timer
+            self.__current_algorithm._sleep_time = self._w_speed_scale.get()
+            ## start the algorithm
+            self.__current_algorithm.run()
+
 
     def __do_stop_algorithm(self):
         """stop the running algorithm"""
@@ -244,7 +262,7 @@ class Visualizer(AbstractVisualizer):
         """draw all"""
         drawer  = self.__drawer
         dataset = self.dataset
-        show_value_flag = self.__show_value_flag
+        show_value_flag = self.show_value_flag
 
         ## setup dataset
         self.__drawer.setup_dataset(self.dataset)
@@ -257,11 +275,61 @@ class Visualizer(AbstractVisualizer):
         draw_all(rectangle_color=rectangle_color, value_color=value_color)
 
 
+    def register(self, *algorithms):
+        """register algorithms"""
+        for algorithm in algorithms:
+            self.__algorithm_manager.register(algorithm)
+
+    def __init_algorithm(self):
+        """initialize an algorithm"""
+        ## get an algorithm from the combobox
+        selected_algorithm = self._w_select_algorithm_combobox.get()
+        algorithm_obj = None
+
+        if selected_algorithm:
+            ## set a selected algorithm
+            algorithm_obj = self.__algorithm_manager.get_algorithm(selected_algorithm)
+
+            ## set the algorithm
+            self.__setup_algorithm(algorithm_obj)
+
+        ## set a selected algorithm object as a current algorithm
+        self.__current_algorithm = algorithm_obj
+
+
+    def __setup_algorithm(self, algorithm):
+        """setup an algorithm"""
+        manager = self.__algorithm_manager
+        drawer  = self.__drawer
+        dataset = self.dataset
+        show_value_flag = self.show_value_flag
+
+        ## setup dataset
+        self.__drawer.setup_dataset(self.dataset)
+
+        ## define functions
+        draw         = drawer.get_draw_function(dataset=dataset, show_value_flag=show_value_flag)
+        draw_all     = self.__draw_all
+
+        ## attach
+        manager.attach(algorithm=algorithm
+                       , dataset=dataset
+                       , draw=draw
+                       , draw_all=draw_all
+                       , swap=lambda index_1, index_2: drawer.swap(obj_1=dataset[index_1], obj_2=dataset[index_2])
+                       , erase=lambda *indexes: drawer.erase_objs(*[dataset[i] for i in indexes])
+                       , erase_all=lambda : drawer.erase_objs(*dataset)
+                       , reset_colors=lambda *indexes: draw(*((i, DrawUtilKeys.DEFAULT_COLOR) for i in indexes))
+                       , reset_color_all=lambda : draw_all(DrawUtilKeys.DEFAULT_COLOR, DrawUtilKeys.DEFAULT_COLOR)
+                       )
+
 
 if __name__ == '__main__':
     from core import DataObj
+    from algorithms.sort import Bubble, QuickSort
 
     v = Visualizer()
+    v.register(Bubble, QuickSort)
     v.init()
 
     v.mainloop()
