@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import ttk
 
 # my-packages
+from core import utils
 from core.widgets.visualizer.abstract_visualizer import AbstractVisualizer
 from core.widgets.canvas.draw_util import DrawUtilKeys, DrawUtil
 
@@ -140,8 +141,12 @@ class Visualizer(AbstractVisualizer):
 
         ## attach the canvas
         self.__drawer.attach(self._w_canvas)
-        self._register_before_mainloop(lambda : self.draw_all(DrawUtilKeys.DEFAULT_COLOR, DrawUtilKeys.DEFAULT_COLOR))
+
+        ## set window's position as the center
         self.set_win_center()
+
+        ## register callback
+        self._register_before_mainloop(lambda : self.__do_generate_dataset())
 
     def __arrange_widgets(self):
         """arrange widgets"""
@@ -207,7 +212,9 @@ class Visualizer(AbstractVisualizer):
 
     def __do_generate_dataset(self):
         """generate dataset"""
-        print("[+] pushed the generate button")
+        data_size = self._w_data_size_scale.get()
+        self.dataset = DataObj.convert_data_to_dataset(utils.gen_sample_data(data_size))
+        self.__draw_all(DrawUtilKeys.DEFAULT_COLOR, DrawUtilKeys.DEFAULT_COLOR)
 
     @AbstractVisualizer._do_run_as_thread_decorator
     @__toggle_widgets_state_decorate
@@ -218,7 +225,6 @@ class Visualizer(AbstractVisualizer):
             print(datetime.datetime.now())
             time.sleep(1)
 
-
     def __do_stop_algorithm(self):
         """stop the running algorithm"""
         self._kill_all_threads()
@@ -227,11 +233,13 @@ class Visualizer(AbstractVisualizer):
 
     def __do_shuffle_dataset(self):
         """shuffle the dataset"""
-        print("[+] pushed the shuffle button")
+        if self.dataset:
+            self.dataset = DataObj.convert_data_to_dataset(utils.gen_sample_data(len(self.dataset)))
+            self.__draw_all(DrawUtilKeys.DEFAULT_COLOR, DrawUtilKeys.DEFAULT_COLOR)
 
-    def draw_all(self
-                 , rectangle_color=DrawUtilKeys.CURRENT_COLOR
-                 , value_color=DrawUtilKeys.CURRENT_COLOR):
+    def __draw_all(self
+                   , rectangle_color=DrawUtilKeys.CURRENT_COLOR
+                   , value_color=DrawUtilKeys.CURRENT_COLOR):
         """draw all"""
         drawer  = self.__drawer
         dataset = self.dataset
@@ -249,11 +257,7 @@ class Visualizer(AbstractVisualizer):
 if __name__ == '__main__':
     from core import DataObj
 
-    data = [(i+1) for i in range(100)]
-
     v = Visualizer()
     v.init()
-
-    v.dataset = DataObj.convert_data_to_dataset(data)
 
     v.mainloop()
