@@ -6,7 +6,7 @@ from tkinter import ttk
 
 # my-packages
 from core.widgets.visualizer.abstract_visualizer import AbstractVisualizer
-from core.widgets.canvas.draw_util import DrawUtil
+from core.widgets.canvas.draw_util import DrawUtilKeys, DrawUtil
 
 
 __all__ = ['Visualizer']
@@ -108,10 +108,40 @@ class Visualizer(AbstractVisualizer):
         self._w_canvas_frame = tk.LabelFrame(master=self._w_main_frame, text='Canvas')
         self._w_canvas = tk.Canvas(master=self._w_canvas_frame, background='Gray')
 
+    @property
+    def dataset(self):
+        return self.__dataset
+
+    @staticmethod
+    def __setup_dataset_decorator(m):
+        """setup dataset decorator"""
+        @functools.wraps(m)
+        def wrapper(self, *args, **kwargs):
+            ## execute the method at the first
+            ret = m(self, *args, **kwargs)
+
+            ## initialize and setup the dataset
+            self.__drawer.init_dataset(self.dataset)
+            self.__drawer.setup_dataset(self.dataset)
+
+            return ret
+        return wrapper
+
+    @dataset.setter
+    @__setup_dataset_decorator
+    def dataset(self, dataset):
+        ## set a dataset
+        self.__dataset = dataset
+
     def init(self):
         """initialize widgets"""
         self.__arrange_widgets()
         self.__setup_widgets()
+
+        ## attach the canvas
+        self.__drawer.attach(self._w_canvas)
+        self._register_before_mainloop(lambda : self.draw_all(DrawUtilKeys.DEFAULT_COLOR, DrawUtilKeys.DEFAULT_COLOR))
+        self.set_win_center()
 
     def __arrange_widgets(self):
         """arrange widgets"""
@@ -199,9 +229,31 @@ class Visualizer(AbstractVisualizer):
         """shuffle the dataset"""
         print("[+] pushed the shuffle button")
 
+    def draw_all(self
+                 , rectangle_color=DrawUtilKeys.CURRENT_COLOR
+                 , value_color=DrawUtilKeys.CURRENT_COLOR):
+        """draw all"""
+        drawer  = self.__drawer
+        dataset = self.dataset
+        show_value_flag = self.__show_value_flag
+
+        ## get a function address
+        draw_all = drawer.get_draw_all_function(dataset=dataset
+                                                , show_value_flag=show_value_flag)
+
+        ## execute the function
+        draw_all(rectangle_color=rectangle_color, value_color=value_color)
+
+
 
 if __name__ == '__main__':
+    from core import DataObj
+
+    data = [(i+1) for i in range(100)]
+
     v = Visualizer()
-    v.set_win_center()
     v.init()
+
+    v.dataset = DataObj.convert_data_to_dataset(data)
+
     v.mainloop()
