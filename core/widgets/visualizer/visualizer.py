@@ -113,26 +113,12 @@ class Visualizer(AbstractVisualizer):
     def dataset(self):
         return self.__dataset
 
-    @staticmethod
-    def __setup_dataset_decorator(m):
-        """setup dataset decorator"""
-        @functools.wraps(m)
-        def wrapper(self, *args, **kwargs):
-            ## execute the method at the first
-            ret = m(self, *args, **kwargs)
-
-            ## initialize and setup the dataset
-            self.__drawer.init_dataset(self.dataset)
-            self.__drawer.setup_dataset(self.dataset)
-
-            return ret
-        return wrapper
-
     @dataset.setter
-    @__setup_dataset_decorator
     def dataset(self, dataset):
         ## set a dataset
         self.__dataset = dataset
+        self.__drawer.init_dataset(self.dataset)
+        self.__drawer.setup_dataset(self.dataset)
 
     def init(self):
         """initialize widgets"""
@@ -147,6 +133,20 @@ class Visualizer(AbstractVisualizer):
 
         ## register callback
         self._register_before_mainloop(lambda : self.__do_generate_dataset())
+
+        ## define a bind function
+        def bind_draw_objs(e):
+            ## delete all
+            self.__drawer.w_canvas.delete(tk.ALL)
+
+            ## draw all
+            self.__draw_all(DrawUtilKeys.CURRENT_COLOR, DrawUtilKeys.CURRENT_COLOR)
+
+            ## update
+            self.__drawer.w_canvas.update_idletasks()
+
+        ## setup callback
+        self.__drawer.setup_configure(bind_draw_objs)
 
     def __arrange_widgets(self):
         """arrange widgets"""
@@ -220,9 +220,10 @@ class Visualizer(AbstractVisualizer):
     @__toggle_widgets_state_decorate
     def __do_start_algorithm(self):
         """start a selected algorithm"""
-        import datetime, time
+        import time
         while True:
-            print(datetime.datetime.now())
+            self.__do_shuffle_dataset()
+            print(self.dataset)
             time.sleep(1)
 
     def __do_stop_algorithm(self):
@@ -244,6 +245,9 @@ class Visualizer(AbstractVisualizer):
         drawer  = self.__drawer
         dataset = self.dataset
         show_value_flag = self.__show_value_flag
+
+        ## setup dataset
+        self.__drawer.setup_dataset(self.dataset)
 
         ## get a function address
         draw_all = drawer.get_draw_all_function(dataset=dataset
