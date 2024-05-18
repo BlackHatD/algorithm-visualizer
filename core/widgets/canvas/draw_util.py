@@ -80,9 +80,9 @@ class DrawUtil(AbstractDrawUtil):
         ## define an inner callback function
         def callback(key, obj, p, o, s):
             obj.set_color(key, self.__get_color_util(obj, key, DrawUtilKeys.DEFAULT_COLOR))
-            obj.pos = p
+            obj.pos    = p
             obj.offset = o
-            obj.size = s
+            obj.size   = s
 
         for i, height in enumerate(normalized_data):
             ## setup x1 and x2
@@ -96,7 +96,7 @@ class DrawUtil(AbstractDrawUtil):
             ## setup each data object
             self.__setup_data_obj(lambda key: callback(key
                                                        , dataset[i]
-                                                       , p=[(x1, x2), (y1, y2)]
+                                                       , p=[[x1, y1], [x2, y2]]
                                                        , o=((offset_x/2), offset_y)
                                                        , s=(x_width, y_height)))
 
@@ -112,8 +112,8 @@ class DrawUtil(AbstractDrawUtil):
         color = self.__get_color_util(data_obj=data_obj, key=key, color=color)
 
         ## get data from dataset
-        x1, x2 = data_obj.pos[0]
-        y1, y2 = data_obj.pos[1]
+        x1, y1 = data_obj.pos[0]
+        x2, y2 = data_obj.pos[1]
 
         ## erase a rectangle if already existing
         self.erase_rectangle(data_obj)
@@ -140,7 +140,7 @@ class DrawUtil(AbstractDrawUtil):
 
         ## get data from dataset
         data               = data_obj.value
-        x1, x2             = data_obj.pos[0]
+        x2                 = data_obj.pos[1][0]
         offset_x, offset_y = data_obj.offset
         width, height      = data_obj.size
 
@@ -174,8 +174,9 @@ class DrawUtil(AbstractDrawUtil):
         obj_1.value, obj_2.value = obj_2.value, obj_1.value
 
         ## swap each height
-        ## pos[1] = (y1, y2)
-        obj_1.pos[1], obj_2.pos[1] = obj_2.pos[1], obj_1.pos[1]
+        ## pos[0][1], pos[1][1] = (y1, y2)
+        obj_1.pos[0][1], obj_2.pos[0][1] = obj_2.pos[0][1], obj_1.pos[0][1]
+        obj_1.pos[1][1], obj_2.pos[1][1] = obj_2.pos[1][1], obj_1.pos[1][1]
 
         ## execute the after callbacks
         after_callback()
