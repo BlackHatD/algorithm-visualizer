@@ -2,14 +2,12 @@
 # builtins
 import copy
 import functools
-from logging import getLogger
 
 # my-packages
 from visualizer.data.base import DataObjBase
 
 __all__ = ['DataObj']
 
-logger = getLogger(__name__)
 
 class DataObj(DataObjBase):
     """Data Object Class for canvas widget"""
@@ -126,4 +124,3 @@ class DataObj(DataObjBase):
     def get_color(self, key):
         """get color"""
         return self.__objs[key].get(DataObj.__KEY_COLOR)
-
