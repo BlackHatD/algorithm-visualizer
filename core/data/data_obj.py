@@ -4,7 +4,7 @@ import copy
 import functools
 
 # my-packages
-from visualizer.data.base import DataObjBase
+from core.data.base import DataObjBase
 
 __all__ = ['DataObj']
 

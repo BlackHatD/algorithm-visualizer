@@ -4,7 +4,7 @@ import time
 from abc import ABCMeta, abstractmethod
 
 # my-packages
-from visualizer.data.data_obj import DataObj
+from core.data.data_obj import DataObj
 
 __all__ = ['AbstractAlgorithm']
 

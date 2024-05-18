@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 # my-packages
-from visualizer.data import DataObj
+from core.data import DataObj
 
 if __name__ == '__main__':
     # Test overridden operators

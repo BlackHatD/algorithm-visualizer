@@ -3,7 +3,7 @@
 import tkinter as tk
 
 # my-packages
-from visualizer.widgets.canvas.abstract_draw_util import AbstractDrawUtil
+from core.widgets.canvas.abstract_draw_util import AbstractDrawUtil
 
 __all__ = ['DrawUtilKeys', 'DrawUtil']
 

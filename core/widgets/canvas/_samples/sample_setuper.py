@@ -3,8 +3,8 @@
 import tkinter as tk
 
 # my-packages
-from visualizer.data import DataObj
-from visualizer.widgets.canvas import DrawUtilKeys, DrawUtil
+from core.data import DataObj
+from core.widgets.canvas import DrawUtilKeys, DrawUtil
 
 
 __all__ = ['root', 'DataObj', 'DrawUtilKeys', 'DrawUtil', 'setuper']
