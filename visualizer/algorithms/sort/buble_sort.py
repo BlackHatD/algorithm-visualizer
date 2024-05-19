@@ -6,6 +6,8 @@ from visualizer.core.algorithm import AbstractAlgorithm
 __all__ = ['Bubble']
 
 class Bubble(AbstractAlgorithm):
+    """Bubble Sort"""
+
     def run(self):
         dataset = self.dataset
         n = len(dataset)
