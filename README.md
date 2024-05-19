@@ -1,4 +1,7 @@
-# Algorithm visualiser
+# Algorithm visualizer
+<img src="https://img.shields.io/badge/Python-3.x-3776AB.svg?logo=python&style=plastic" />
+
+![](./img/sample01.jpg)
 ## How to use
 ### clone this branch
 ```bash
