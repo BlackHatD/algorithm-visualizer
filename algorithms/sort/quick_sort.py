@@ -33,8 +33,6 @@ class QuickSort(AbstractAlgorithm):
             ## so use '.value'
             pivot = dataset[get_pivot_index(start_index, end_index)].value
 
-            # self.draw_pivot(pivot)
-
             left_index  = start_index
             right_index = end_index
 
@@ -69,11 +67,14 @@ class QuickSort(AbstractAlgorithm):
                     self.draw((right_index, 'Pink'))
                     self.sleep()
 
+
                 if right_index <= left_index:
-                    self.reset_colors(left_index, right_index, get_pivot_index(start_index, end_index), self.get_current_pivot_index(pivot))
+                    ## reset colors after that break
+                    self.reset_colors(left_index, right_index
+                                      , get_pivot_index(start_index, end_index), self.get_current_pivot_index(pivot))
                     break
 
-                ## draw
+                ## draw objects
                 self.draw((left_index, 'Red'), (right_index, 'Red'))
                 self.sleep()
 
@@ -101,5 +102,6 @@ class QuickSort(AbstractAlgorithm):
 
         __recursive(0, len(dataset)-1)
 
+        ## draw all objects
         self.draw_all('Yellow')
 
