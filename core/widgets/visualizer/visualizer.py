@@ -109,6 +109,14 @@ class Visualizer(AbstractVisualizer):
         ### set default speed
         self._w_speed_scale.set(speed_scale_default)
 
+        ##----------------------------------------------------------------------##
+        ## show value frame
+        self._v_show_value_flag  = tk.BooleanVar()
+        self._w_show_value_frame = tk.Frame(master=self._w_option_frame)
+        self._w_show_value_checkbutton = tk.Checkbutton(master=self._w_show_value_frame
+                                                        , text='Show value'
+                                                        , variable=self._v_show_value_flag
+                                                        , state=tk.NORMAL)
 
         ##======================================================================##
         ## canvas frame
@@ -174,6 +182,10 @@ class Visualizer(AbstractVisualizer):
         ### button
         self._w_generate_button.pack(side=tk.TOP)
 
+        ## show value frame
+        self._w_show_value_frame.pack(side=tk.RIGHT)
+        self._w_show_value_checkbutton.pack()
+
         ## speed frame
         self._w_speed_scale_frame.pack(side=tk.RIGHT)
         self._w_speed_scale.pack(side=tk.LEFT)
@@ -182,11 +194,11 @@ class Visualizer(AbstractVisualizer):
         self._w_algorithm_frame.pack(side=tk.RIGHT)
         ### combobox
         self._w_select_algorithm_combobox.grid(row=0, column=0)
-
         ### button
         self._w_start_button.grid(row=0, column=1)
         self._w_shuffle_button.grid(row=1, column=1)
         self._w_stop_button.grid(row=2, column=1)
+
 
         ## canvas frame
         self._w_canvas_frame.pack(fill=tk.BOTH, expand=True)
@@ -206,6 +218,9 @@ class Visualizer(AbstractVisualizer):
         self._w_stop_button.configure(command=self.__do_stop_algorithm)
         self._w_shuffle_button.configure(command=self.__do_shuffle_dataset)
 
+        ## checkbutton
+        self._w_show_value_checkbutton.configure(command=self.__on_check_show_value)
+
     def __toggle_widgets_state(self):
         """toggle widgets state"""
         self._toggle_widget_state(self._w_generate_button, tk.NORMAL, tk.DISABLED)
@@ -213,6 +228,7 @@ class Visualizer(AbstractVisualizer):
         self._toggle_widget_state(self._w_stop_button, tk.NORMAL, tk.DISABLED)
         self._toggle_widget_state(self._w_shuffle_button, tk.NORMAL, tk.DISABLED)
         self._toggle_widget_state(self._w_select_algorithm_combobox, 'readonly', tk.DISABLED)
+        self._toggle_widget_state(self._w_show_value_checkbutton, tk.NORMAL, tk.DISABLED)
 
     @staticmethod
     def __toggle_widgets_state_decorate(m):
@@ -261,6 +277,13 @@ class Visualizer(AbstractVisualizer):
         if self.dataset:
             self.dataset = DataObj.convert_data_to_dataset(utils.gen_sample_data(len(self.dataset)))
             self.__draw_all(DrawUtilKeys.DEFAULT_COLOR, DrawUtilKeys.DEFAULT_COLOR)
+
+    def __on_check_show_value(self):
+        """show value"""
+        self.show_value_flag = True if self._v_show_value_flag.get() else False
+        self.__draw_all(DrawUtilKeys.CURRENT_COLOR, DrawUtilKeys.CURRENT_COLOR)
+
+
 
     def __draw_all(self
                    , rectangle_color=DrawUtilKeys.CURRENT_COLOR
