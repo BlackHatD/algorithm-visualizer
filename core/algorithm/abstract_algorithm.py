@@ -31,9 +31,10 @@ class AbstractAlgorithm(metaclass=ABCMeta):
     def run(self):
         raise NotImplementedError()
 
-    def get_value(self, index):
-        """get value"""
-        return self.dataset[index].value
+    def sleep(self):
+        """sleep for drawing"""
+        if self._attached:
+            time.sleep(self._sleep_time)
 
     def get_data(self):
         """get data"""
@@ -44,11 +45,10 @@ class AbstractAlgorithm(metaclass=ABCMeta):
         self.dataset = DataObj.convert_data_to_dataset(data)
 
     @staticmethod
-    def show_data(data, _f=print):
+    def show_data(msg, data, _f=print):
         """"show data"""
         def __gen_text(d):
-            return '|{} |'.format(
-                ' |'.join([str(_d).rjust(len(str(len(d)))+1) for _d in d]))
+            return '{}|{} |'.format(msg, ' |'.join([str(_d).rjust(len(str(len(d)))+1) for _d in d]))
         _f(__gen_text(data))
 
     def draw(self, *args):
@@ -74,16 +74,23 @@ class AbstractAlgorithm(metaclass=ABCMeta):
 
     def swap(self, index_1, index_2):
         """this method will be overridden"""
+        ## display
+        print("[+] {}({}, {})".format(self.swap.__name__, index_1, index_2))
+        print('    index_1: {}'.format(index_1))
+        print('    index_2: {}'.format(index_2))
+        self.show_data("             ", [i for i in range(len(self.dataset))])
+        self.show_data("    Before ->", self.dataset)
+
+        ## swap each data
         self.dataset[index_1], self.dataset[index_2] = self.dataset[index_2], self.dataset[index_1]
+
+        ## display
+        self.show_data("    After  ->", self.dataset)
+        print()
 
     def reset_colors(self, *indexes):
         """this method will be overridden"""
 
     def reset_color_all(self):
         """this method will be overridden"""
-
-    def sleep(self):
-        """sleep for drawing"""
-        if self._attached:
-            time.sleep(self._sleep_time)
 
