@@ -17,7 +17,7 @@ class QuickSort(AbstractAlgorithm):
 
     def draw_area(self, start_index, end_index, pivot):
         area_color  = 'Black'
-        self.draw((start_index, area_color), (end_index, area_color))
+        self.draw((start_index, area_color, 'White'), (end_index, area_color, 'White'))
         self.draw_current_pivot(pivot)
 
 
