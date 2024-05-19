@@ -6,6 +6,7 @@ from tkinter import ttk
 
 # my-packages
 from core import utils
+from core.data.data_obj import DataObj
 from core.widgets.visualizer.abstract_visualizer import AbstractVisualizer
 from core.widgets.canvas.draw_util import DrawUtilKeys, DrawUtil
 from core.algorithm.manager import AlgorithmManager
@@ -125,6 +126,11 @@ class Visualizer(AbstractVisualizer):
         self.__dataset = dataset
         self.__drawer.init_dataset(self.dataset)
         self.__drawer.setup_dataset(self.dataset)
+
+    def set_data(self, data):
+        """set data"""
+        self.dataset = DataObj.convert_data_to_dataset(data)
+
 
     def init(self):
         """initialize widgets"""
@@ -324,12 +330,3 @@ class Visualizer(AbstractVisualizer):
                        )
 
 
-if __name__ == '__main__':
-    from core import DataObj
-    from algorithms.sort import Bubble, QuickSort
-
-    v = Visualizer()
-    v.register(Bubble, QuickSort)
-    v.init()
-
-    v.mainloop()
