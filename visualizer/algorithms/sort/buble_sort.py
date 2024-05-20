@@ -3,9 +3,9 @@
 # my-packages
 from visualizer.core.algorithm import AbstractAlgorithm
 
-__all__ = ['Bubble']
+__all__ = ['BubbleSort']
 
-class Bubble(AbstractAlgorithm):
+class BubbleSort(AbstractAlgorithm):
     """Bubble Sort"""
 
     def run(self):
