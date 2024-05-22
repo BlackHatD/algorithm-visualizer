@@ -1,24 +1,32 @@
 # -*- coding:utf-8 -*-
 # my-packages
+from visualizer.core import DrawUtilKeys
 from visualizer.core.algorithm import AbstractAlgorithm
 
 __all__ = ['QuickSort']
 
 class QuickSort(AbstractAlgorithm):
     """QuickSort"""
+    def draw_current_pivots(self, pivot_value, color):
+        """draw current pivots"""
+        for i in [pi for pi in range(len(self.dataset)) if self.dataset[pi] == pivot_value]:
+            self.draw((i, color))
 
-    def get_current_pivot_index(self, pivot):
-        for i in range(len(self.dataset)):
-            if self.dataset[i] == pivot:
-                return i
+    def draw_fence_lines(self, start_index, end_index):
+        """draw fence lines and pivot"""
+        rectangle_color = 'Black'
+        value_color     = 'White'
+        self.draw((start_index, rectangle_color, value_color), (end_index, rectangle_color, value_color))
 
-    def draw_current_pivot(self, pivot):
-        self.draw((self.get_current_pivot_index(pivot), 'Yellow'))
+    def draw_step(self, index, color):
+        """draw step"""
+        self.draw((index, color), )
+        self.sleep()
 
-    def draw_area(self, start_index, end_index, pivot):
-        area_color  = 'Black'
-        self.draw((start_index, area_color, 'White'), (end_index, area_color, 'White'))
-        self.draw_current_pivot(pivot)
+    def draw_swapped(self, index_1, index_2, color):
+        """draw swapped indexes"""
+        self.draw((index_1, color), (index_2, color))
+        self.sleep()
 
 
     def run(self):
@@ -38,52 +46,55 @@ class QuickSort(AbstractAlgorithm):
 
             while True:
                 ## draw start and end
-                self.draw_area(start_index, end_index, pivot)
+                self.draw_fence_lines(start_index, end_index)
+                self.draw_current_pivots(pivot, 'Yellow')
 
                 ## find a value bigger than the pivot
                 ## from the left side
-                self.draw((left_index, 'Blue'))
-                self.sleep()
+                self.draw_step(left_index, 'Blue')
                 while dataset[left_index] < pivot:
+                    ## reset left index's color
                     self.reset_colors(left_index)
 
                     left_index += 1
 
-                    self.draw_area(start_index, end_index, pivot)
-                    self.draw((left_index, 'Blue'))
-                    self.sleep()
+                    ## draw objects
+                    self.draw_fence_lines(start_index, end_index)
+                    self.draw_step(left_index, 'Blue')
 
+                ## draw pivots
+                self.draw_current_pivots(pivot, 'Yellow')
 
                 ## find a value smaller than the pivot
                 ## from the right side
-                self.draw((right_index, 'Pink'))
-                self.sleep()
+                self.draw_step(right_index, 'Pink')
                 while pivot < dataset[right_index]:
+                    ## reset right index's color
                     self.reset_colors(right_index)
 
                     right_index -= 1
 
-                    self.draw_area(start_index, end_index, pivot)
-                    self.draw((right_index, 'Pink'))
-                    self.sleep()
+                    ## draw objects
+                    self.draw_fence_lines(start_index, end_index)
+                    self.draw_step(right_index, 'Pink')
 
+                ## draw pivots
+                self.draw_current_pivots(pivot, 'Yellow')
 
                 if right_index <= left_index:
                     ## reset colors after that break
-                    self.reset_colors(left_index, right_index
-                                      , get_pivot_index(start_index, end_index), self.get_current_pivot_index(pivot))
+                    self.reset_colors(left_index, right_index)
+                    self.draw_current_pivots(pivot, DrawUtilKeys.DEFAULT_COLOR)
                     break
 
                 ## draw objects
-                self.draw((left_index, 'Red'), (right_index, 'Red'))
-                self.sleep()
+                self.draw_swapped(left_index, right_index, 'Red')
 
                 ## swap each data
                 self.swap(left_index, right_index)
 
-                ## draw
-                self.draw((left_index, 'Red'), (right_index, 'Red'))
-                self.sleep()
+                ## draw objects
+                self.draw_swapped(left_index, right_index, 'Red')
 
                 ## reset colors
                 self.reset_colors(left_index, right_index)
