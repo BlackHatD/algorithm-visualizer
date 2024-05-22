@@ -5,7 +5,7 @@
 ## How to use
 ### clone this branch
 ```bash
-git clone https://github.com/BlackHatD/algorithm-visualizer.git
+pip install git+https://github.com/BlackHatD/algorithm-visualizer.git@feature/visualizer_ver1.0.1
 ```
 <br>
 
@@ -18,5 +18,3 @@ python -m visualizer
 
 ## TODO
 - write details
-- add License
-- create setup.py
