@@ -16,33 +16,41 @@ if __name__ == '__main__':
 
     ### Addition (+)
     assert (d1 + v2) == (v1 + v2), (d1 + v2)
+    assert (v1 + d2) == (v1 + v2), (d1 + v2)
     assert (d1 + d2) == (v1 + v2), (d1 + d2)
 
     ### Subtraction (-)
     assert (d1 - v2) == (v1 - v2), (d1 - v2)
+    assert (v1 - d2) == (v1 - v2), (d1 - v2)
     assert (d1 - d2) == (v1 - v2), (d1 - d2)
 
     ### Multiplication (*)
     assert (d1 * v2) == (v1 * v2), (d1 * v2)
+    assert (v1 * d2) == (v1 * v2), (d1 * v2)
     assert (d1 * d2) == (v1 * v2), (d1 * d2)
 
     ### True Division (/)
     assert (d1 / v2) == (v1 / v2), (d1 / v2)
+    assert (v1 / d2) == (v1 / v2), (d1 / v2)
     assert (d1 / d2) == (v1 / v2), (d1 / d2)
 
     ### Floor Division (//)
     assert (d1 // v2) == (v1 // v2), (d1 // v2)
+    assert (v1 // d2) == (v1 // v2), (d1 // v2)
     assert (d1 // d2) == (v1 // v2), (d1 // d2)
 
     ## Greater than (<)
     assert (d1 < v2) == (v1 < v2), (d1 < v2)
+    assert (v1 < d2) == (v1 < v2), (d1 < v2)
     assert (d1 < d2) == (v1 < v2), (d1 < d2)
 
     ## Equal to
     assert (d1 == v2) == (v1 == v2), (d1 == v2)
+    assert (v1 == d2) == (v1 == v2), (d1 == v2)
     assert (d1 == d2) == (v1 == v2), (d1 == d2)
 
     ## Less than (>)
     assert (d1 > v2) == (v1 > v2), (d1 > v2)
+    assert (v1 > d2) == (v1 > v2), (d1 > v2)
     assert (d1 > d2) == (v1 > v2), (d1 > d2)
 
