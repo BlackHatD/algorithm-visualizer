@@ -40,20 +40,44 @@ class DataObjBase:
         return self.value + other
 
     @__check_instance_decorator
+    def __radd__(self, other):
+        return other + self.value
+
+    @__check_instance_decorator
     def __sub__(self, other):
         return self.value - other
+
+    @__check_instance_decorator
+    def __rsub__(self, other):
+        return other - self.value
+
 
     @__check_instance_decorator
     def __mul__(self, other):
         return self.value * other
 
     @__check_instance_decorator
+    def __rmul__(self, other):
+        return other * self.value
+
+
+    @__check_instance_decorator
     def __truediv__(self, other):
         return self.value / other
 
     @__check_instance_decorator
+    def __rtruediv__(self, other):
+        return other / self.value
+
+
+    @__check_instance_decorator
     def __floordiv__(self, other):
         return self.value // other
+
+    @__check_instance_decorator
+    def __rfloordiv__(self, other):
+        return other // self.value
+
 
     @__check_instance_decorator
     def __lt__(self, other):
