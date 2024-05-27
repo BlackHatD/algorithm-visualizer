@@ -7,20 +7,20 @@
 ![](./img/sample02.gif)
 
 ## How to use
-### install a below package
+### Install a below package
 ```bash
-pip install git+https://github.com/BlackHatD/algorithm-visualizer.git@dev
+pip install git+https://github.com/BlackHatD/algorithm-visualizer.git
 ```
 <br>
 
-### quick start
+### Quick start
 ```bash
 python -m visualizer
 ```
 
 <br>
 
-### using the package
+### Using the package
 ```python
 from visualizer import Visualizer
 from visualizer.algorithms.sort import BubbleSort, QuickSort
@@ -40,16 +40,16 @@ v.mainloop()
 <br>
 
 ## Create a customized algorithm
-- samples
+- Samples
   - [buble_sort.py](./visualizer/algorithms/sort/buble_sort.py)
     - [sample_buble_sort.py](./visualizer/algorithms/sort/_samples/sample_buble_sort.py)
   - [quick_sort.py](./visualizer/algorithms/sort/quick_sort.py)
     - [sample_quick_sort.py](./visualizer/algorithms/sort/_samples/sample_quick_sort.py)
-### import below modules
+### Import below modules
 ```python
 from visualizer import AbstractAlgorithm
 ```
-### inherit it and override the `run` method
+### Inherit it and override the `run` method
 ```python
 class SampleAlgorithm(AbstractAlgorithm):
     def run(self):
@@ -58,10 +58,13 @@ class SampleAlgorithm(AbstractAlgorithm):
         dataset = self.dataset
 ```
 **Note**:   
-　in the `AbstractAlgorithm`,   
+　In the `AbstractAlgorithm`,   
 　a customized data object, which is [`DataObj`](./visualizer/core/data/data_obj.py), is used.  
 　So if you want to get a value, use `.value`
 ```python
+# -*- coding:utf-8 -*-
+from visualizer import AbstractAlgorithm
+
 class SampleAlgorithm(AbstractAlgorithm):
     def run(self):
         dataset = self.dataset
@@ -87,8 +90,8 @@ class SampleAlgorithm(AbstractAlgorithm):
         print(dataset)
         self.swap(0, 9)
         print(dataset)
-        ## >>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        ## >>[+] swap(0, 9)
+        ## >> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        ## >> [+] swap(0, 9)
         ## >>    index_1: 0
         ## >>    index_2: 9
         ## >>             |  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |
@@ -105,32 +108,33 @@ if __name__ == '__main__':
 ```
   
 
-- useful methods in the `AbstractAlgorithm` class
-  - for drawing things in a canvas widget
+- Useful methods in the `AbstractAlgorithm` class
+  - for drawing and erasing things in a canvas widget
     - `draw`
     - `draw_all`
-    - `erase`
-    - `erase_all`
     - `reset_colors`
     - `reset_color_all`
-  - for sleeping if this object is used in a visualizer
+    - `erase`
+    - `erase_all`
+  - for sleeping (the method isn't make sense if not using in a visualizer)
     - `sleep`
   - for swapping each data
     - `swap`
 
 **NOTE**  
-These useful methods are overridden when used it in the `Visualizer`,  
-and overridden methods draw things into a canvas widget
+These useful methods are overridden when used it in the `Visualizer`.
 
 <br>
 
-### sample code
+### Sample code
 ![](./img/sample03.gif)
 
 ```python
 # -*- coding:utf-8 -*-
-from visualizer import AbstractAlgorithm
-from visualizer import Visualizer
+from visualizer import (
+  AbstractAlgorithm
+  , Visualizer
+)
 
 class SampleAlgorithm(AbstractAlgorithm):
 
@@ -158,6 +162,9 @@ class SampleAlgorithm(AbstractAlgorithm):
         ## display dataset
         print(dataset)
         ## > [10, 2, 3, 4, 5, 6, 7, 8, 9, 1]
+        
+        #print(dataset[0])
+        #print(dataset[0].get_obj_details())
 
 
 if __name__ == '__main__':
@@ -173,10 +180,11 @@ if __name__ == '__main__':
     v.init()
     v.mainloop()
 ```
-
+<br>
 
 
 ## TODOs
+- write more details
 - add other sort algorithms
 - add search algorithms
 

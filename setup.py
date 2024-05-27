@@ -15,7 +15,6 @@ DESCRIPTION  = 'Algorithm Visualizer'
 CLASSIFIERS  = [
     'License :: OSI Approved :: MIT License',
     'Operating System :: Microsoft :: Windows',
-    'Operating System :: POSIX',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
     'Topic :: Software Development',
